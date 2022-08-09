@@ -20,7 +20,8 @@ func main() {
 	})
 
 	e.GET("/ping", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
+		name := c.FormValue("name")
+		return c.JSON(http.StatusOK, struct{ Status string }{Status: "k, " + name})
 	})
 
 	httpPort := os.Getenv("HTTP_PORT")
