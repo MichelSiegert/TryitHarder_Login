@@ -11,6 +11,6 @@ This Project uses Docker,
 To build the file execute the Dockerfile.
 
 Alternatively you can run the Compose file, with `docker run -d -p 8080:8080 tryitharder-backendd`
-this will run this application on port `localhost:8080`.
+this will run this application on port `localhost:8080`.x
 
 NOTE: this is moslty so I dont forget this :D
