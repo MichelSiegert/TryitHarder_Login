@@ -12,7 +12,12 @@ func DeleteUser(db *sql.DB, id string) int {
 		fmt.Println(err)
 		return 500
 	}
-	err = query.Close()
+	defer func(query *sql.Rows) {
+		err := query.Close()
+		if err != nil {
+
+		}
+	}(query)
 	if err != nil {
 		fmt.Println(err)
 		return 500
