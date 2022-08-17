@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+// example function
 func get(c echo.Context) error {
 	return c.HTML(http.StatusOK, "Hello, Docker! <3")
 }

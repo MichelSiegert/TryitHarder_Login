@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/labstack/echo/v4"
 )
@@ -12,33 +11,27 @@ func login(c echo.Context) error {
 	response := &Response{Mail: "jsomichel", httpstatus: 200, Message: read, Data: "all systems ready!", User: users}
 
 	db := connectDB()
-	createTable(db)
-	query, err := db.Query("SELECT *  FROM Users")
-	if err != nil {
-		fmt.Println(err)
-		return c.JSON(response.httpstatus, response)
-	}
+	status := 0
 
-	var id, name, mail, address, dateOfBirth, firstLogin, password string
-
-	defer func(query *sql.Rows) {
-		err := query.Close()
-		if err != nil {
-			fmt.Println(err)
-		}
-	}(query)
-	for query.Next() {
-		err := query.Scan(&id, &name, &password, &mail, &address, &dateOfBirth, &firstLogin)
-		if err != nil {
-			fmt.Println(err)
-		}
-		tmp := userData{id, name, password, mail, address, dateOfBirth, firstLogin}
-		response.User = append(response.User, tmp)
-
+	newUser := userData{Name: "michel", Email: "msiegert@dons.usfca.edu", DateOfBirth: "12.03.1997", Password: "nicepassword", Address: "Am Deepenbrook 1"}
+	status = insertUser(db, newUser)
+	if status != 200 {
+		fmt.Println("something went wrong while creating the user!")
 	}
-	err = query.Err()
-	if err != nil {
-		fmt.Println(err)
+	var user userData
+	user = selectUser(db, "msiegert@dons.usfca.edu")
+
+	fmt.Println(user.Email, user.Id, user.Address)
+	status = UpdateUser(db, user.Id, user.Name, user.Password, user.Email, "brodersdorfer straße", user.DateOfBirth)
+	if status != 200 {
+		fmt.Println("something went wrong while editing the user data")
 	}
+	user = selectUser(db, "msiegert@dons.usfca.edu")
+	fmt.Println(user.Address)
+	status = DeleteUser(db, user.Id)
+	if status != 200 {
+		fmt.Println("something went wrong while deleting the user!")
+	}
+	response.User = append(users, user)
 	return c.JSON(response.httpstatus, response)
 }
