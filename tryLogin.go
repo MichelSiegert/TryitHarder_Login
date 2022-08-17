@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
@@ -28,11 +29,39 @@ func main() {
 
 	//BASE Example for POST
 	e.POST("/nice", func(c echo.Context) error {
+		var users []userData
 		read := c.FormValue("name")
-		response := &Response{Mail: "jsomichel", httpstatus: 200, Message: read, Data: "all systems ready!"}
+		response := &Response{Mail: "jsomichel", httpstatus: 200, Message: read, Data: "all systems ready!", User: users}
 
 		db := connectDB()
-		fmt.Println(db)
+		createTable(db)
+		query, err := db.Query("SELECT *  FROM Users")
+		if err != nil {
+			fmt.Println(err)
+			return c.JSON(response.httpstatus, response)
+		}
+
+		var a, b, d, e, f, g, h string
+
+		defer func(query *sql.Rows) {
+			err := query.Close()
+			if err != nil {
+				fmt.Println(err)
+			}
+		}(query)
+		for query.Next() {
+			err := query.Scan(&a, &b, &h, &d, &e, &f, &g)
+			if err != nil {
+				fmt.Println(err)
+			}
+			tmp := userData{a, b, h, d, e, f, g}
+			response.User = append(response.User, tmp)
+
+		}
+		err = query.Err()
+		if err != nil {
+			fmt.Println(err)
+		}
 		return c.JSON(response.httpstatus, response)
 	})
 

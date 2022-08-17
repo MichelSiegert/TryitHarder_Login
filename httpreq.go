@@ -5,4 +5,5 @@ type Response struct {
 	httpstatus int
 	Message    string
 	Data       string
+	User       []userData
 }
