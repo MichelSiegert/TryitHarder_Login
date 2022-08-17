@@ -22,7 +22,6 @@ func main() {
 	}))
 
 	//base example for GET
-
 	e.GET("/", func(c echo.Context) error {
 		return c.HTML(http.StatusOK, "Hello, Docker! <3")
 	})
@@ -31,10 +30,14 @@ func main() {
 	e.POST("/nice", func(c echo.Context) error {
 		read := c.FormValue("name")
 		response := &Response{Mail: "jsomichel", httpstatus: 200, Message: read, Data: "all systems ready!"}
+
+		db := connectDB()
+		fmt.Println(db)
 		return c.JSON(response.httpstatus, response)
 	})
 
-	//get port
+	//set port
+
 	httpPort := os.Getenv("HTTP_PORT")
 	if httpPort == "" {
 		httpPort = "8080"
