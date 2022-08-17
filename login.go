@@ -22,10 +22,12 @@ func login(c echo.Context) error {
 	user = selectUser(db, "msiegert@dons.usfca.edu")
 
 	fmt.Println(user.Email, user.Id, user.Address)
-	status = UpdateUser(db, user.Id, user.Name, user.Password, "brodersdorfer straße", user.Email, user.DateOfBirth)
+	status = UpdateUser(db, user.Id, user.Name, user.Password, user.Email, "brodersdorfer straße", user.DateOfBirth)
 	if status != 200 {
 		fmt.Println("something went wrong while editing the user data")
 	}
+	user = selectUser(db, "msiegert@dons.usfca.edu")
+	fmt.Println(user.Address)
 	status = DeleteUser(db, user.Id)
 	if status != 200 {
 		fmt.Println("something went wrong while deleting the user!")

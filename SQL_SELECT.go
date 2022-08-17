@@ -27,7 +27,14 @@ func selectUser(db *sql.DB, email string) userData {
 		return user
 	}
 	for query.Next() {
-		err := query.Scan(&id, &name, &mail, &address, &dateOfBirth, &firstLogin, &password)
+		err := query.Scan(
+			&id,
+			&name,
+			&password,
+			&mail,
+			&address,
+			&dateOfBirth,
+			&firstLogin)
 		user.Name = name
 		user.Id = id
 		user.Email = mail
