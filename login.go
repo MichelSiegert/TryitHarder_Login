@@ -12,7 +12,6 @@ func login(c echo.Context) error {
 	response := &Response{Mail: "jsomichel", httpstatus: 200, Message: read, Data: "all systems ready!", User: users}
 
 	db := connectDB()
-	createTable(db)
 	query, err := db.Query("SELECT *  FROM Users")
 	if err != nil {
 		fmt.Println(err)
