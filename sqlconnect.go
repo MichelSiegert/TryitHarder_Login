@@ -17,15 +17,12 @@ func connectDB() *sql.DB {
 	db, err := sql.Open("mysql",
 		username+":"+password+"@tcp("+hostname+":"+port+")/"+database)
 	if err != nil {
-		fmt.Println("failed to open connection!")
 		fmt.Println(err)
 		return nil
 	}
 	err = db.Ping()
 	if err != nil {
-		fmt.Println("ping failed! well get em next time!")
 		fmt.Println(err)
 	}
-	fmt.Println("the connection to the database was an absolute success!")
 	return db
 }
