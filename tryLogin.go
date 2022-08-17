@@ -11,7 +11,6 @@ import (
 func main() {
 
 	e := echo.New()
-
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	//required to avoid coarse issues
@@ -22,6 +21,7 @@ func main() {
 	}))
 
 	//base example for GET
+
 	e.GET("/", func(c echo.Context) error {
 		return c.HTML(http.StatusOK, "Hello, Docker! <3")
 	})
@@ -29,7 +29,8 @@ func main() {
 	//BASE Example for POST
 	e.POST("/nice", func(c echo.Context) error {
 		read := c.FormValue("name")
-		return c.JSON(http.StatusOK, struct{ Status string }{Status: read})
+		response := &Response{Mail: "jsomichel", httpstatus: 200, Message: read, Data: "all systems ready!"}
+		return c.JSON(response.httpstatus, response)
 	})
 
 	//get port
@@ -38,6 +39,5 @@ func main() {
 		httpPort = "8080"
 	}
 
-	//start the bad boi:girl
 	e.Logger.Fatal(e.Start(":" + httpPort))
 }
