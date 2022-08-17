@@ -1,11 +1,10 @@
 package main
 
 import (
-	"net/http"
-	"os"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"net/http"
+	"os"
 )
 
 func main() {
@@ -19,21 +18,10 @@ func main() {
 		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete, http.MethodOptions},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAccessControlAllowOrigin, echo.HeaderAccessControlAllowMethods},
 	}))
+	e.GET("/", get)
+	e.POST("/nice", login)
 
-	//base example for GET
-
-	e.GET("/", func(c echo.Context) error {
-		return c.HTML(http.StatusOK, "Hello, Docker! <3")
-	})
-
-	//BASE Example for POST
-	e.POST("/nice", func(c echo.Context) error {
-		read := c.FormValue("name")
-		response := &Response{Mail: "jsomichel", httpstatus: 200, Message: read, Data: "all systems ready!"}
-		return c.JSON(response.httpstatus, response)
-	})
-
-	//get port
+	//setPort
 	httpPort := os.Getenv("HTTP_PORT")
 	if httpPort == "" {
 		httpPort = "8080"
