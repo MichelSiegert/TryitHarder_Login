@@ -24,6 +24,10 @@ func main() {
 		user := parseUser(c)
 		return createNewAccount(user, db, c)
 	})
+	e.POST("/login", func(c echo.Context) error {
+		user := parseUser(c)
+		return tryLogin(user, db, c)
+	})
 	e.POST("/test", func(c echo.Context) error {
 		return testRest(c, db)
 	})
