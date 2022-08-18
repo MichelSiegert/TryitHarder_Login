@@ -25,7 +25,9 @@ func main() {
 		return createNewAccount(user, db, c)
 	})
 	e.POST("/login", func(c echo.Context) error {
-		user := parseUser(c)
+		var user userData
+		user.Name = c.FormValue("name")
+		user.Password = c.FormValue("password")
 		return tryLogin(user, db, c)
 	})
 	e.POST("/test", func(c echo.Context) error {
