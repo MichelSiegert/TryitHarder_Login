@@ -10,6 +10,7 @@ import (
 
 func main() {
 	fmt.Println(generateRandomString())
+	fmt.Println(encryptString("nice"))
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
