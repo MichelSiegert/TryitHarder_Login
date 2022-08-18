@@ -26,7 +26,7 @@ func main() {
 	})
 	e.POST("/login", func(c echo.Context) error {
 		var user userData
-		user.Name = c.FormValue("name")
+		user.Email = c.FormValue("email")
 		user.Password = c.FormValue("password")
 		return tryLogin(user, db, c)
 	})

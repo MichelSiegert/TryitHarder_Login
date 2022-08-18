@@ -10,11 +10,12 @@ func tryLogin(user userData, db *sql.DB, c echo.Context) error {
 	var response Response
 	token := checkUser(user, db)
 	if token == "-1" {
-		response.Data += "failed to login! \n"
-		response.httpstatus = http.StatusPaymentRequired
+		response.Message = "failed to login! \n"
+		response.httpstatus = http.StatusOK
 	} else {
-		response.Message = token
+		response.Data = token
 		response.Mail = user.Email
+		response.Message = " successfully loggeed in!"
 	}
 	return c.JSON(response.httpstatus, response)
 }
