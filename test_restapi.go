@@ -11,13 +11,11 @@ func testRest(c echo.Context, db *sql.DB) error {
 	read := c.FormValue("name")
 	response := Response{Mail: "jsomichel", httpstatus: 200, Message: read, Data: "all systems ready!", User: users}
 
-	status := 0
+	status := 200
 
 	newUser := userData{Name: "michel", Email: "msiegert@dons.usfca.edu", Password: "nicepassword", Address: "Am Deepenbrook 1"}
-	status = insertUser(db, newUser, response)
-	if status != 200 {
-		fmt.Println("something went wrong while creating the user!")
-	}
+	insertUser(db, newUser, response)
+
 	var user userData
 	user = selectUser(db, "msiegert@dons.usfca.edu")
 

@@ -20,6 +20,6 @@ func createNewAccount(data userData, db *sql.DB, c echo.Context) error {
 	response.User = append(response.User, data)
 	response.Message = "done!"
 	response.Mail = "ka lol."
-	insertUser(db, data, response)
+	response = insertUser(db, data, response)
 	return c.JSON(response.httpstatus, response)
 }

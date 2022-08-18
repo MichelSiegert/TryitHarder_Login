@@ -5,14 +5,14 @@ import (
 	"fmt"
 )
 
-func insertUser(db *sql.DB, user userData, response Response) int {
+func insertUser(db *sql.DB, user userData, response Response) Response {
 
 	query, err := db.Query("INSERT INTO USERS (username, usrpassword, email, address, session_token) VALUES (?, ?, ?, ?, ?)", user.Name, user.Password, user.Email, user.Address, user.SessID)
 
 	if err != nil {
 		response.Data += err.Error() + "\n"
 		fmt.Println(err)
-		return 500
+		return response
 	}
 	defer func(query *sql.Rows) {
 		err := query.Close()
@@ -23,9 +23,9 @@ func insertUser(db *sql.DB, user userData, response Response) int {
 	if err != nil {
 		fmt.Println(err)
 		response.Data += err.Error() + "\n"
-		return 500
+		return response
 	}
 	fmt.Println("successfully added the user!")
 	response.Data += "successfully added the user!\n"
-	return 200
+	return response
 }
