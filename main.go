@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
@@ -8,7 +9,8 @@ import (
 )
 
 func main() {
-
+	fmt.Println(generateRandomString())
+	fmt.Println(encryptString("nice"))
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
