@@ -6,7 +6,7 @@ import (
 )
 
 func selectUser(db *sql.DB, email string) userData {
-	var id, name, mail, address, dateOfBirth, firstLogin, password string
+	var id, name, mail, address, password, sessID string
 	user := userData{}
 	fmt.Print("#")
 	query, err := db.Query("SELECT * FROM USERS WHERE email = ?", email)
@@ -33,16 +33,14 @@ func selectUser(db *sql.DB, email string) userData {
 			&password,
 			&mail,
 			&address,
-			&dateOfBirth,
-			&firstLogin)
+			&sessID)
 		user.Name = name
 		user.Id = id
 		user.Email = mail
 		user.Address = address
-		user.DateOfLogin = firstLogin
-		user.DateOfBirth = dateOfBirth
+		user.SessID = sessID
 		user.Password = password
-		fmt.Println(name, id, mail, address, firstLogin, dateOfBirth, password)
+		fmt.Println(name, id, mail, address, sessID, password)
 		if err != nil {
 			fmt.Println(err)
 			return user

@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-func UpdateUser(db *sql.DB, id string, username string, password string, email string, address string, dateOfBirth string) int {
+func UpdateUser(db *sql.DB, id string, username string, password string, email string, address string, sessID string) int {
 
-	query, err := db.Query("UPDATE USERS SET username = ? , usrpassword = ?, email = ?, address = ?, DateOfBirth = ? WHERE id = ?", username, password, email, address, dateOfBirth, id)
+	query, err := db.Query("UPDATE USERS SET username = ? , usrpassword = ?, email = ?, address = ?, sessID = ? WHERE id = ?", username, password, email, address, sessID, id)
 	if err != nil {
 		fmt.Println(err)
 		return 500

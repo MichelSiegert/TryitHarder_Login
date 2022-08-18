@@ -13,7 +13,7 @@ func selectAll(db *sql.DB) []userData {
 		return data
 	}
 
-	var id, name, mail, address, dateOfBirth, firstLogin, password string
+	var id, name, mail, address, sessID, password string
 
 	err = query.Close()
 	if err != nil {
@@ -22,12 +22,12 @@ func selectAll(db *sql.DB) []userData {
 	}
 
 	for query.Next() {
-		err := query.Scan(&id, &name, &password, &mail, &address, &dateOfBirth, &firstLogin)
+		err := query.Scan(&id, &name, &password, &mail, &address, &sessID)
 		if err != nil {
 			fmt.Println(err)
 			return data
 		}
-		tmp := userData{id, name, password, mail, address, dateOfBirth, firstLogin}
+		tmp := userData{id, name, password, mail, address, sessID}
 		data = append(data, tmp)
 		fmt.Println("a")
 	}

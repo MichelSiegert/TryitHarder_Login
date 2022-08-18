@@ -17,3 +17,12 @@ func encryptString(text string) string {
 	result = hex.EncodeToString(sha)
 	return result
 }
+
+func encryptUser(user userData) userData {
+	var result userData
+	result.Email = encryptString(user.Email)
+	result.Name = encryptString(user.Name)
+	result.Password = encryptString(user.Password)
+	result.SessID = user.SessID
+	return result
+}

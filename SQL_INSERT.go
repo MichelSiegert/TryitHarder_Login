@@ -7,7 +7,7 @@ import (
 
 func insertUser(db *sql.DB, user userData) int {
 
-	query, err := db.Query("INSERT INTO USERS (username, usrpassword, email, address, DateOfBirth ) VALUES (?, ?, ?, ?, ?)", user.Name, user.Password, user.Email, user.Address, user.DateOfBirth)
+	query, err := db.Query("INSERT INTO USERS (username, usrpassword, email, address, sessID ) VALUES (?, ?, ?, ?, ?)", user.Name, user.Password, user.Email, user.Address, user.SessID)
 
 	if err != nil {
 		fmt.Println(err)
@@ -22,6 +22,6 @@ func insertUser(db *sql.DB, user userData) int {
 		fmt.Println(err)
 		return 500
 	}
-
+	fmt.Println("successfully added the user!")
 	return 200
 }
