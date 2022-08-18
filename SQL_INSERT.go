@@ -7,7 +7,7 @@ import (
 
 func insertUser(db *sql.DB, user userData) int {
 
-	query, err := db.Query("INSERT INTO USERS (username, usrpassword, email, address, sessID ) VALUES (?, ?, ?, ?, ?)", user.Name, user.Password, user.Email, user.Address, user.SessID)
+	query, err := db.Query("INSERT INTO USERS (username, usrpassword, email, address, session_token) VALUES (?, ?, ?, ?, ?)", user.Name, user.Password, user.Email, user.Address, user.SessID)
 
 	if err != nil {
 		fmt.Println(err)
