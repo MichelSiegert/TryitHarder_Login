@@ -5,26 +5,23 @@ import (
 	"fmt"
 )
 
-func selectUser(db *sql.DB, email string) userData {
+func checkUser(usr userData, db *sql.DB) string {
 	var id, name, mail, address, password, sessID string
 	user := userData{}
-	fmt.Print("#")
-	query, err := db.Query("SELECT * FROM USERS WHERE email = ?", email)
+	query, err := db.Query("SELECT * FROM USERS WHERE email = ? AND usrpassword = ? ", usr.Email, usr.Password)
 	if err != nil {
 		fmt.Println(err)
-		return user
+		return "-1"
 	}
-	fmt.Print("#")
 	defer func(query *sql.Rows) {
 		err := query.Close()
 		if err != nil {
 			fmt.Println(err)
 		}
 	}(query)
-	fmt.Print("#")
 	if err != nil {
 		fmt.Println(err)
-		return user
+		return "-1"
 	}
 	for query.Next() {
 		err := query.Scan(
@@ -43,17 +40,19 @@ func selectUser(db *sql.DB, email string) userData {
 		fmt.Println(name, id, mail, address, sessID, password)
 		if err != nil {
 			fmt.Println(err)
-			return user
+			return "-1"
 		}
 
 	}
-	fmt.Print("#")
 	err = query.Err()
-	fmt.Print("#")
 	if err != nil {
 		fmt.Println(err)
-		return user
+		return "-1"
 	}
-	fmt.Println("# Done!")
-	return user
+
+	if user.Password == usr.Password && user.Email == usr.Email {
+		fmt.Println("Done!")
+		return user.SessID
+	}
+	return "-1"
 }

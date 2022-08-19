@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
@@ -9,8 +8,6 @@ import (
 )
 
 func main() {
-	fmt.Println(generateRandomString())
-	fmt.Println(encryptString("nice"))
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -20,8 +17,22 @@ func main() {
 		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete, http.MethodOptions},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAccessControlAllowOrigin, echo.HeaderAccessControlAllowMethods},
 	}))
-	e.GET("/", get)
-	e.POST("/nice", login)
+	db := connectDB()
+
+	e.POST("/insert", func(c echo.Context) error {
+
+		user := parseUser(c)
+		return createNewAccount(user, db, c)
+	})
+	e.POST("/login", func(c echo.Context) error {
+		var user userData
+		user.Email = c.FormValue("email")
+		user.Password = c.FormValue("password")
+		return tryLogin(user, db, c)
+	})
+	e.POST("/test", func(c echo.Context) error {
+		return testRest(c, db)
+	})
 
 	//setPort
 	httpPort := os.Getenv("HTTP_PORT")
