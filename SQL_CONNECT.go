@@ -3,20 +3,21 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"os"
 )
 
 func connectDB() (*sql.DB, error) {
-
-	user := "tryituserbase"
-	password := "voJ<kCK4~)T.-H,k"
-	hostname := "34.159.221.111"
-	port := "3306"
-	dbname := "TryItHarder"
+	user := os.Getenv("SQL_USERNAME")
+	password := os.Getenv("S1QL_PASSWORD")
+	hostname := os.Getenv("SQL_DATABASE")
+	port := os.Getenv("SQL_PORT")
+	dbname := os.Getenv("SQL_HOSTNAME")
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, hostname, port, dbname)
-	dbPool, err := sql.Open("mysql", dsn)
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		fmt.Println("sql.open: " + err.Error())
 		return nil, err
 	}
-	return dbPool, nil
+	return db, nil
 }
