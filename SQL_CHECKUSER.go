@@ -5,13 +5,13 @@ import (
 	"fmt"
 )
 
-func checkUser(usr userData, db *sql.DB) string {
+func checkUser(usr userData, db *sql.DB) (string, string) {
 	var id, name, mail, address, password, sessID string
 	user := userData{}
 	query, err := db.Query("SELECT * FROM USERS WHERE email = ? AND usrpassword = ? ", usr.Email, usr.Password)
 	if err != nil {
 		fmt.Println(err)
-		return "-1"
+		return err.Error(), "-1"
 	}
 	defer func(query *sql.Rows) {
 		err := query.Close()
@@ -21,7 +21,7 @@ func checkUser(usr userData, db *sql.DB) string {
 	}(query)
 	if err != nil {
 		fmt.Println(err)
-		return "-1"
+		return err.Error(), "-1"
 	}
 	for query.Next() {
 		err := query.Scan(
@@ -40,19 +40,19 @@ func checkUser(usr userData, db *sql.DB) string {
 		fmt.Println(name, id, mail, address, sessID, password)
 		if err != nil {
 			fmt.Println(err)
-			return "-1"
+			return err.Error(), "-1"
 		}
 
 	}
 	err = query.Err()
 	if err != nil {
 		fmt.Println(err)
-		return "-1"
+		return err.Error(), "-1"
 	}
 
 	if user.Password == usr.Password && user.Email == usr.Email {
 		fmt.Println("Done!")
-		return user.SessID
+		return "", user.SessID
 	}
-	return "-1"
+	return "Wrong password!", "-1"
 }
