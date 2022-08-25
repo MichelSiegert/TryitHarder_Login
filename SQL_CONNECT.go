@@ -9,7 +9,7 @@ import (
 
 func connectDB() (*sql.DB, error) {
 	user := os.Getenv("SQL_USERNAME")
-	password := os.Getenv("S1QL_PASSWORD")
+	password := os.Getenv("SQL_PASSWORD")
 	hostname := os.Getenv("SQL_DATABASE")
 	port := os.Getenv("SQL_PORT")
 	dbname := os.Getenv("SQL_HOSTNAME")
