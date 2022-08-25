@@ -7,22 +7,17 @@ import (
 	"os"
 )
 
-func connectDB() *sql.DB {
-	username := os.Getenv("SQL_USERNAME")
-	password := os.Getenv("SQL_PASSWORD")
-	database := os.Getenv("SQL_DATABASE")
+func connectDB() (*sql.DB, error) {
+	user := os.Getenv("SQL_USERNAME")
+	password := os.Getenv("S1QL_PASSWORD")
+	hostname := os.Getenv("SQL_DATABASE")
 	port := os.Getenv("SQL_PORT")
-	hostname := os.Getenv("SQL_HOSTNAME")
-
-	db, err := sql.Open("mysql",
-		username+":"+password+"@tcp("+hostname+":"+port+")/"+database)
+	dbname := os.Getenv("SQL_HOSTNAME")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, hostname, port, dbname)
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		fmt.Println("sql.open: " + err.Error())
+		return nil, err
 	}
-	err = db.Ping()
-	if err != nil {
-		fmt.Println(err)
-	}
-	return db
+	return db, nil
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
@@ -17,7 +18,10 @@ func main() {
 		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete, http.MethodOptions},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAccessControlAllowOrigin, echo.HeaderAccessControlAllowMethods},
 	}))
-	db := connectDB()
+	db, err := connectDB()
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	e.POST("/insert", func(c echo.Context) error {
 
@@ -29,9 +33,6 @@ func main() {
 		user.Email = c.FormValue("email")
 		user.Password = c.FormValue("password")
 		return tryLogin(user, db, c)
-	})
-	e.POST("/test", func(c echo.Context) error {
-		return testRest(c, db)
 	})
 
 	//setPort
