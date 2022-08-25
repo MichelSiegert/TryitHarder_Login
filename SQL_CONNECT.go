@@ -1,28 +1,46 @@
 package main
 
 import (
+	"cloud.google.com/go/cloudsqlconn"
+	"context"
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"os"
+	"github.com/go-sql-driver/mysql"
+	"net"
 )
 
-func connectDB() *sql.DB {
-	username := os.Getenv("SQL_USERNAME")
-	password := os.Getenv("SQL_PASSWORD")
-	database := os.Getenv("SQL_DATABASE")
-	port := os.Getenv("SQL_PORT")
-	hostname := os.Getenv("SQL_HOSTNAME")
+func connectDB() (*sql.DB, error) {
 
-	db, err := sql.Open("mysql",
-		username+":"+password+"@tcp("+hostname+":"+port+")/"+database)
+	// Note: Saving credentials in environment variables is convenient, but not
+	// secure - consider a more secure solution such as
+	// Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+	// keep secrets safe.
+	var (
+		dbUser                 = "tryituserbase"                          // e.g. 'my-db-user'
+		dbPwd                  = "voJ<kCK4~)T.-H,k"                       // e.g. 'my-db-password'
+		dbName                 = "TryItHarder"                            // e.g. 'my-database'
+		instanceConnectionName = "tryitharder:europe-west3:tryituserbase" // e.g. 'project:region:instance'
+		usePrivate             = ""
+	)
+
+	d, err := cloudsqlconn.NewDialer(context.Background())
 	if err != nil {
-		fmt.Println(err)
-		return nil
+		return nil, fmt.Errorf("cloudsqlconn.NewDialer: %v", err)
 	}
-	err = db.Ping()
+	mysql.RegisterDialContext("cloudsqlconn",
+		func(ctx context.Context, addr string) (net.Conn, error) {
+			if usePrivate != "" {
+				return d.Dial(ctx, instanceConnectionName, cloudsqlconn.WithPrivateIP())
+			}
+			return d.Dial(ctx, instanceConnectionName)
+		})
+
+	dbURI := fmt.Sprintf("%s:%s@cloudsqlconn(localhost:3306)/%s?parseTime=true",
+		dbUser, dbPwd, dbName)
+
+	dbPool, err := sql.Open("mysql", dbURI)
 	if err != nil {
-		fmt.Println(err)
+		return nil, fmt.Errorf("sql.Open: %v", err)
 	}
-	return db
+	return dbPool, nil
 }
